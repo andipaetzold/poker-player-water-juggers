@@ -1,5 +1,3 @@
-const NAME = "Water Juggers";
-
 class Player {
   static get VERSION() {
     return "0.1";
@@ -7,8 +5,8 @@ class Player {
 
   static betRequest(gameState, bet) {
     try {
-      console.log(gameState);
-      const player = gameState.players.find((p) => p.name === NAME);
+      console.log('betRequest', gameState);
+      const player = gameState.players[gameState.in_action];
       bet(gameState.current_buy_in - player.bet);
     } catch (e) {
       console.error(e);
@@ -17,7 +15,7 @@ class Player {
   }
 
   static showdown(gameState) {
-    console.log(gameState);
+    console.log('showdown', gameState);
   }
 }
 
