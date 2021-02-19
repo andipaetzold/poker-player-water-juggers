@@ -101,15 +101,11 @@ class Player {
             fold(bet);
             break;
           case 2: // one pair
-            if (isSomeoneAllIn) {
-              fold(bet);
-            } else {
-              call(bet, gameState, player);
-            }
+            call(bet, gameState, player);
             break;
           case 3: // two pair
             if (isSomeoneAllIn) {
-              fold(bet);
+              call(bet, gameState, player);
             } else {
               raise(bet, gameState, player, 5);
             }
