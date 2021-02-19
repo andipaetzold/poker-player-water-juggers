@@ -19,7 +19,7 @@ const ranksOrdered = [
 
 class Player {
   static get VERSION() {
-    return "0.9-alpha";
+    return "zero.ten";
   }
 
   static betRequest(gameState, bet) {
@@ -30,10 +30,7 @@ class Player {
         "Community Cards",
         JSON.stringify(gameState.community_cards, undefined, 2)
       );
-      console.log(
-        "Players",
-        JSON.stringify(gameState.players, undefined, 2)
-      );
+      console.log("Players", JSON.stringify(gameState.players, undefined, 2));
       console.log(
         "Hole Cards",
         JSON.stringify(player.hole_cards, undefined, 2)
@@ -51,8 +48,11 @@ class Player {
 
       if (isPreFlop(gameState)) {
         console.log("Phase: pre-flop");
+        console.log(`Win Prob: ${probRow.wins}`);
         if (probRow.wins > 20) {
           raise(bet, gameState, player, 5);
+        } else if (probRow.wins > 16) {
+          call(bet, gameState, player);
         } else {
           fold(bet);
         }
