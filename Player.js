@@ -1,22 +1,40 @@
+import { CardGroup, OddsCalculator } from "poker-odds-calculator";
+
 class Player {
   static get VERSION() {
     return "0.1";
   }
 
   static betRequest(gameState, bet) {
+    const player = gameState.players[gameState.in_action];
+
     try {
-      console.log('betRequest', gameState);
-      const player = gameState.players[gameState.in_action];
+      console.log("betRequest", gameState);
+      const ourCards = player.hole_cards
+        .map((card) => parseCard(card))
+        .join("");
+
+      const communityCards = (gameState.community_cards || [])
+        .map((card) => parseCard(card))
+        .join("");
+
+      const result = OddsCalculator.calculate(
+        [CardGroup.fromString(ourCards)],
+        CardGroup.fromString(communityCards)
+      );
+      console.log("result", JSON.stringify(result));
       bet(player.stack);
     } catch (e) {
       console.error(e);
-      bet(0);
+      bet(player.stack);
     }
   }
 
-  static showdown(gameState) {
-    console.log('showdown', gameState);
-  }
+  static showdown(gameState) {}
 }
 
 module.exports = Player;
+
+function parseCard(card) {
+  return `${card.rank}${card.suit[0]}`;
+}
