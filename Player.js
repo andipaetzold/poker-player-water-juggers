@@ -105,7 +105,9 @@ class Player {
     }
   }
 
-  static showdown(gameState) {}
+  static showdown(gameState) {
+    console.log("Showdown", JSON.stringify(gameState, undefined, 2));
+  }
 }
 
 function allIn(bet, player) {
