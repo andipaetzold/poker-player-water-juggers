@@ -1,4 +1,5 @@
 const pairProbability = require("./winning4");
+const Hand = require("pokersolver").Hand;
 
 const ranksOrdered = [
   "A",
@@ -58,6 +59,15 @@ class Player {
       console.error(e);
       bet(player.stack);
     }
+
+    const hand = Hand.solve([
+      ...player.hole_cards.map((card) => `${getRank(card)}${card.suit[0]}`),
+      ...gameState.community_cards.map(
+        (card) => `${getRank(card)}${card.suit[0]}`
+      ),
+    ]);
+
+    console.log(hand);
   }
 
   static showdown(gameState) {}
