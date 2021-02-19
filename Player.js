@@ -10,16 +10,19 @@ class Player {
 
     try {
       console.log("betRequest", JSON.stringify(gameState, undefined, 4));
-      const ourCards = player.hole_cards
-        .map((card) => parseCard(card))
-        .join("");
+
+      const playerCards = gameState.players
+        .map((p) => {
+          return (p.hole_cards || []).map((card) => parseCard(card)).join("");
+        })
+        .map((cards) => CardGroup.fromString(cards));
 
       const communityCards = (gameState.community_cards || [])
         .map((card) => parseCard(card))
         .join("");
 
       const result = OddsCalculator.calculate(
-        [CardGroup.fromString(ourCards)],
+        playerCards,
         CardGroup.fromString(communityCards)
       );
       console.log("result", JSON.stringify(result));
