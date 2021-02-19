@@ -18,7 +18,7 @@ const ranksOrdered = [
 
 class Player {
   static get VERSION() {
-    return "0.6";
+    return "0.7";
   }
 
   static betRequest(gameState, bet) {
@@ -31,18 +31,22 @@ class Player {
       const probRow = pairProbability.find((p) => p.pair === pair);
 
       if (isPreFlop(gameState)) {
+        console.log("Phase: pre-flop");
         if (probRow.wins > 20) {
-          console.log("Action: All-In");
-          bet(
-            gameState.current_buy_in - player.bet + 5 * gameState.minimum_raise
-          );
+          raise(bet, gameState, player, 5);
         } else {
-          console.log("Action: Fold");
-          bet(0);
+          fold(bet)
+        }
+      } else if (isPreTurn(gameState)) {
+        console.log("Phase: pre-turn");
+        if (probRow.wins > 25) {
+          raise(bet, gameState, player, 5);
+        } else {
+          call(bet, gameState, player);
         }
       } else {
-        console.log("Action: Call");
-        bet(gameState.current_buy_in - player.bet);
+        console.log("Phase: pre-river");
+        call(bet, gameState, player);
       }
     } catch (e) {
       console.error(e);
@@ -53,10 +57,29 @@ class Player {
   static showdown(gameState) {}
 }
 
+function call(bet, gameState, player) {
+  console.log("Action: Call");
+  bet(gameState.current_buy_in - player.bet);
+}
+
+function raise(bet, gameState, player, factor) {
+  console.log("Action: Raise", factor);
+  bet(gameState.current_buy_in - player.bet + factor * gameState.minimum_raise);
+}
+
+function fold(bet) {
+  console.log("Action: Fold");
+  bet(0);
+}
+
 module.exports = Player;
 
 function isPreFlop(gameState) {
   return gameState.community_cards.length === 0;
+}
+
+function isPreTurn(gameState) {
+  return gameState.community_cards.length === 3;
 }
 
 function getPair(cards) {
