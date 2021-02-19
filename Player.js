@@ -41,7 +41,7 @@ class Player {
       } else if (isPreTurn(gameState)) {
         console.log("Phase: pre-turn");
 
-        const ourRanks = player.cards.map((c) => c.rank);
+        const ourRanks = player.hole_cards.map((c) => c.rank);
         const hasPair = gameState.community_cards.find((c) =>
           ourRanks.includes(c.rank)
         );
