@@ -28,11 +28,15 @@ class Player {
     try {
       console.log(
         "Community Cards",
-        JSON.stringify(gameState.community_cards, undefined, 4)
+        JSON.stringify(gameState.community_cards, undefined, 2)
+      );
+      console.log(
+        "Players",
+        JSON.stringify(gameState.players, undefined, 2)
       );
       console.log(
         "Hole Cards",
-        JSON.stringify(player.hole_cards, undefined, 4)
+        JSON.stringify(player.hole_cards, undefined, 2)
       );
 
       const isSomeoneAllIn = gameState.players
