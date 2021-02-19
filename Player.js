@@ -19,7 +19,7 @@ const ranksOrdered = [
 
 class Player {
   static get VERSION() {
-    return "zero.ten";
+    return "0.11";
   }
 
   static betRequest(gameState, bet) {
@@ -46,6 +46,15 @@ class Player {
       const pair = getPair(player.hole_cards);
       const probRow = pairProbability.find((p) => p.pair === pair);
 
+      const hand = Hand.solve([
+        ...player.hole_cards.map((card) => `${getRank(card)}${card.suit[0]}`),
+        ...gameState.community_cards.map(
+          (card) => `${getRank(card)}${card.suit[0]}`
+        ),
+      ]);
+      console.log(`Rank: ${hand.rank}`);
+      console.log(`Hand Name: ${hand.name}`);
+
       if (isPreFlop(gameState)) {
         console.log("Phase: pre-flop");
         console.log(`Win Prob: ${probRow.wins}`);
@@ -56,26 +65,43 @@ class Player {
         } else {
           fold(bet);
         }
-      } else {
-        if (isPreTurn(gameState)) {
-          console.log("Phase: pre-turn");
-        } else if (isPreRiver(gameState)) {
-          console.log("Phase: pre-river");
-        } else {
-          console.log("Phase: pre-showdown");
-        }
-
-        const hand = Hand.solve([
-          ...player.hole_cards.map((card) => `${getRank(card)}${card.suit[0]}`),
-          ...gameState.community_cards.map(
-            (card) => `${getRank(card)}${card.suit[0]}`
-          ),
-        ]);
-
-        console.log(`Rank: ${hand.rank}`);
-        console.log(`Hand Name: ${hand.name}`);
+      } else if (isPreTurn(gameState)) {
         switch (hand.rank) {
-          case 1: // Highest card
+          case 1: // highest card
+            fold(bet);
+            break;
+          case 2: // one pair
+            raise(bet, gameState, player, 1);
+            break;
+          case 3: // two pair
+            if (isSomeoneAllIn) {
+              fold(bet);
+            } else {
+              raise(bet, gameState, player, 5);
+            }
+            break;
+          case 4: // three of a kind
+            raise(bet, gameState, player, 10);
+            break;
+          case 5: // straight
+            raise(bet, gameState, player, 15);
+            break;
+          case 6: // flush
+            raise(bet, gameState, player, 25);
+            break;
+          case 7: // full house
+          case 8: // Four of a kind
+          case 9: // Straight flush
+          case 10: // Royal flush
+            allIn(bet, player);
+            break;
+          default:
+            allIn(bet, player);
+            break;
+        }
+      } else if (isPreRiver(gameState)) {
+        switch (hand.rank) {
+          case 1: // highest card
             fold(bet);
             break;
           case 2: // one pair
@@ -102,14 +128,46 @@ class Player {
             raise(bet, gameState, player, 25);
             break;
           case 7: // full house
-            allIn(bet, player);
-            break;
           case 8: // Four of a kind
-            allIn(bet, player);
-            break;
           case 9: // Straight flush
+          case 10: // Royal flush
             allIn(bet, player);
             break;
+          default:
+            allIn(bet, player);
+            break;
+        }
+      } else {
+        switch (hand.rank) {
+          case 1: // highest card
+            fold(bet);
+            break;
+          case 2: // one pair
+            if (isSomeoneAllIn) {
+              fold(bet);
+            } else {
+              call(bet, gameState, player);
+            }
+            break;
+          case 3: // two pair
+            if (isSomeoneAllIn) {
+              fold(bet);
+            } else {
+              raise(bet, gameState, player, 5);
+            }
+            break;
+          case 4: // three of a kind
+            raise(bet, gameState, player, 10);
+            break;
+          case 5: // straight
+            raise(bet, gameState, player, 15);
+            break;
+          case 6: // flush
+            raise(bet, gameState, player, 25);
+            break;
+          case 7: // full house
+          case 8: // Four of a kind
+          case 9: // Straight flush
           case 10: // Royal flush
             allIn(bet, player);
             break;
@@ -154,14 +212,28 @@ function fold(bet) {
 module.exports = Player;
 
 function isPreFlop(gameState) {
-  return gameState.community_cards.length === 0;
+  return getPhase(gameState) === "pre-flop";
 }
 
 function isPreTurn(gameState) {
-  return gameState.community_cards.length === 3;
+  return getPhase(gameState) === "pre-turn";
 }
 function isPreRiver(gameState) {
-  return gameState.community_cards.length === 4;
+  return getPhase(gameState) === "pre-river";
+}
+
+function getPhase(gameState) {
+  switch (gameState.community_cards.length) {
+    case 0:
+      return "pre-flop";
+    case 3:
+      return "pre-turn";
+    case 4:
+      return "pre-river";
+    case 5:
+    default:
+      return "pre-showdown";
+  }
 }
 
 function getPair(cards) {
