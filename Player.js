@@ -159,9 +159,11 @@ function call(bet, gameState, player) {
 
 function raise(bet, gameState, player, factor) {
   console.log("Action: Raise", factor);
-  bet(
-    gameState.current_buy_in - player.bet + gameState.minimum_raise + 5 * factor
-  );
+  if (gameState.minimum_raise > 50) {
+    bet(gameState.current_buy_in - player.bet + gameState.minimum_raise);
+  } else {
+    call(bet, gameState, player);
+  }
 }
 
 function fold(bet) {
