@@ -38,6 +38,9 @@ class Player {
       const isSomeoneAllIn = gameState.players
         .filter((_, index) => index !== gameState.in_action)
         .some((p) => p.stack === 0 && p.status === "active");
+      if (isSomeoneAllIn) {
+        console.log("Someone is all in");
+      }
 
       const pair = getPair(player.hole_cards);
       const probRow = pairProbability.find((p) => p.pair === pair);
@@ -135,10 +138,7 @@ function call(bet, gameState, player) {
 function raise(bet, gameState, player, factor) {
   console.log("Action: Raise", factor);
   bet(
-    gameState.current_buy_in -
-      player.bet +
-      gameState.minimum_raise +
-      5 * factor
+    gameState.current_buy_in - player.bet + gameState.minimum_raise + 5 * factor
   );
 }
 
