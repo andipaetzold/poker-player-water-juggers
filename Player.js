@@ -134,43 +134,7 @@ class Player {
             break;
         }
       } else {
-        switch (hand.rank) {
-          case 1: // highest card
-            fold(bet);
-            break;
-          case 2: // one pair
-            if (isSomeoneAllIn) {
-              fold(bet);
-            } else {
-              call(bet, gameState, player);
-            }
-            break;
-          case 3: // two pair
-            if (isSomeoneAllIn) {
-              fold(bet);
-            } else {
-              raise(bet, gameState, player, 5);
-            }
-            break;
-          case 4: // three of a kind
-            raise(bet, gameState, player, 10);
-            break;
-          case 5: // straight
-            raise(bet, gameState, player, 15);
-            break;
-          case 6: // flush
-            raise(bet, gameState, player, 25);
-            break;
-          case 7: // full house
-          case 8: // Four of a kind
-          case 9: // Straight flush
-          case 10: // Royal flush
-            allIn(bet, player);
-            break;
-          default:
-            allIn(bet, player);
-            break;
-        }
+        call(bet, gameState, player);
       }
     } catch (e) {
       console.error(e);
