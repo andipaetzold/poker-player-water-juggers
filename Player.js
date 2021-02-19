@@ -26,7 +26,8 @@ class Player {
     const player = gameState.players[gameState.in_action];
 
     try {
-      console.log("betRequest", JSON.stringify(gameState, undefined, 4));
+      console.log("betRequest", JSON.stringify(gameState.community_cards, undefined, 4));
+      console.log("betRequest", JSON.stringify(player.hole_cards, undefined, 4));
 
       const pair = getPair(player.hole_cards);
       const probRow = pairProbability.find((p) => p.pair === pair);
@@ -54,6 +55,8 @@ class Player {
           ),
         ]);
 
+        console.log(`Rank: ${hand.rank}`)
+        console.log(`Hand Name: ${hand.name}`)
         switch (hand.rank) {
           case 1:
             fold(bet);
