@@ -37,7 +37,7 @@ module.exports = Player;
 
 function parseCard(card) {
   if (card.rank === "10") {
-    return `t${card.suit[0]}`;
+    return `T${card.suit[0]}`;
   }
 
   return `${card.rank}${card.suit[0]}`;
