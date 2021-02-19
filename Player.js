@@ -1,8 +1,8 @@
-const { CardGroup, OddsCalculator } = require("poker-odds-calculator");
+const pairProbability = require("./winning4");
 
 class Player {
   static get VERSION() {
-    return "0.3";
+    return "0.4";
   }
 
   static betRequest(gameState, bet) {
@@ -11,21 +11,10 @@ class Player {
     try {
       console.log("betRequest", JSON.stringify(gameState, undefined, 4));
 
-      const playerCards = gameState.players
-        .map((p) => {
-          return (p.hole_cards || []).map((card) => parseCard(card)).join("");
-        })
-        .map((cards) => CardGroup.fromString(cards));
+      const pair = getPair(player.hole_cards);
 
-      const communityCards = (gameState.community_cards || [])
-        .map((card) => parseCard(card))
-        .join("");
+      console.log(pairProbability.find((p) => p.pair === pair));
 
-      const result = OddsCalculator.calculate(
-        playerCards,
-        CardGroup.fromString(communityCards)
-      );
-      console.log("result", JSON.stringify(result));
       bet(player.stack);
     } catch (e) {
       console.error(e);
@@ -38,10 +27,14 @@ class Player {
 
 module.exports = Player;
 
-function parseCard(card) {
-  if (card.rank === "10") {
-    return `T${card.suit[0]}`;
-  }
+function getPair(cards) {
+  const sameSuit = cards[0].suit === cards[1].suit;
+  return `${getRank(cards[0])}${getRank(cards[1])}${sameSuit ? "s" : ""}`;
+}
 
-  return `${card.rank}${card.suit[0]}`;
+function getRank(card) {
+  if (card.rank === "10") {
+    return "T";
+  }
+  return card.rank[0];
 }
