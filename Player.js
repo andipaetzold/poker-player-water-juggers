@@ -62,13 +62,11 @@ class Player {
     //   if (isPreFlop(gameState)) {
     //     console.log("Phase: pre-flop");
     //     console.log(`Win Prob: ${probRow.wins}`);
-    //     if (probRow.wins > 20) {
-    //       raise(bet, gameState, player, 5);
-    //     } else if (probRow.wins > 16) {
-    //       call(bet, gameState, player);
-    //     } else {
-    //       fold(bet);
-    //     }
+    if (probRow.wins > 15) {
+      bet(player.stack);
+    } else {
+      fold(bet);
+    }
     //   } else if (isPreTurn(gameState)) {
     //     switch (hand.rank) {
     //       case 1: // highest card
