@@ -9,7 +9,7 @@ class Player {
     const player = gameState.players[gameState.in_action];
 
     try {
-      console.log("betRequest", gameState);
+      console.log("betRequest", JSON.stringify(gameState, undefined, 4));
       const ourCards = player.hole_cards
         .map((card) => parseCard(card))
         .join("");
