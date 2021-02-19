@@ -35,15 +35,11 @@ class Player {
         if (probRow.wins > 20) {
           raise(bet, gameState, player, 5);
         } else {
-          fold(bet)
+          fold(bet);
         }
       } else if (isPreTurn(gameState)) {
         console.log("Phase: pre-turn");
-        if (probRow.wins > 25) {
-          raise(bet, gameState, player, 5);
-        } else {
-          call(bet, gameState, player);
-        }
+        call(bet, gameState, player);
       } else {
         console.log("Phase: pre-river");
         call(bet, gameState, player);
