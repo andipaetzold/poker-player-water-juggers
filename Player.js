@@ -33,7 +33,9 @@ class Player {
       if (isPreFlop(gameState)) {
         if (probRow.wins > 20) {
           console.log("Action: All-In");
-          bet(player.stack);
+          bet(
+            gameState.current_buy_in - player.bet + 5 * gameState.minimum_raise
+          );
         } else {
           console.log("Action: Fold");
           bet(0);
