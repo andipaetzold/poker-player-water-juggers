@@ -58,13 +58,13 @@ function isPreFlop(gameState) {
 function getPair(cards) {
   const ranks = [getRank(cards[0]), getRank(cards[1])].sort(
     (r1, r2) =>
-      ranksOrdered.findIndex((v) => v === r1) -
-      ranksOrdered.findIndex((v) => v === r2)
+      ranksOrdered.findIndex((v) => v === r2) -
+      ranksOrdered.findIndex((v) => v === r1)
   );
   console.log(ranks);
 
   const sameSuit = cards[0].suit === cards[1].suit;
-  return `${ranks.join('')}${sameSuit ? "s" : ""}`;
+  return `${ranks.join("")}${sameSuit ? "s" : ""}`;
 }
 
 function getRank(card) {
