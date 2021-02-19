@@ -35,6 +35,10 @@ class Player {
         JSON.stringify(player.hole_cards, undefined, 4)
       );
 
+      const isSomeoneAllIn = gameState.players
+        .filter((_, index) => index !== gameState.in_action)
+        .some((p) => p.stack === 0 && p.status === "active");
+
       const pair = getPair(player.hole_cards);
       const probRow = pairProbability.find((p) => p.pair === pair);
 
@@ -68,10 +72,18 @@ class Player {
             fold(bet);
             break;
           case 2: // one pair
-            call(bet, gameState, player);
+            if (isSomeoneAllIn) {
+              fold(bet);
+            } else {
+              call(bet, gameState, player);
+            }
             break;
           case 3: // two pair
-            raise(bet, gameState, player, 5);
+            if (isSomeoneAllIn) {
+              fold(bet);
+            } else {
+              raise(bet, gameState, player, 5);
+            }
             break;
           case 4: // three of a kind
             raise(bet, gameState, player, 10);
@@ -125,7 +137,8 @@ function raise(bet, gameState, player, factor) {
   bet(
     gameState.current_buy_in -
       player.bet +
-      Math.max(gameState.minimum_raise, 10) * factor
+      gameState.minimum_raise +
+      5 * factor
   );
 }
 
