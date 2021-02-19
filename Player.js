@@ -19,7 +19,7 @@ const ranksOrdered = [
 
 class Player {
   static get VERSION() {
-    return "0.8";
+    return "0.9-alpha";
   }
 
   static betRequest(gameState, bet) {
@@ -71,25 +71,25 @@ class Player {
             call(bet, gameState, player);
             break;
           case 3: // two pair
-            call(bet, gameState, player);
-            break;
-          case 4: // three of a kind
-            call(bet, gameState, player);
-            break;
-          case 5: // straight
             raise(bet, gameState, player, 5);
             break;
-          case 6: // flush
+          case 4: // three of a kind
             raise(bet, gameState, player, 10);
             break;
-          case 7: // full house
+          case 5: // straight
             raise(bet, gameState, player, 15);
             break;
-          case 8: // Four of a kind
+          case 6: // flush
             raise(bet, gameState, player, 25);
             break;
+          case 7: // full house
+            allIn(bet, player);
+            break;
+          case 8: // Four of a kind
+            allIn(bet, player);
+            break;
           case 9: // Straight flush
-            raise(bet, gameState, player, 50);
+            allIn(bet, player);
             break;
           case 10: // Royal flush
             allIn(bet, player);
