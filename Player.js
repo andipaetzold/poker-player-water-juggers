@@ -39,7 +39,17 @@ class Player {
         }
       } else if (isPreTurn(gameState)) {
         console.log("Phase: pre-turn");
-        call(bet, gameState, player);
+
+        const ourRanks = player.cards.map((c) => c.rank);
+        const hasPair = gameState.community_cards.find((c) =>
+          ourRanks.includes(c.rank)
+        );
+
+        if (hasPair) {
+          raise(bet, gameState, player, 5);
+        } else {
+          call(bet, gameState, player);
+        }
       } else {
         console.log("Phase: pre-river");
         call(bet, gameState, player);
