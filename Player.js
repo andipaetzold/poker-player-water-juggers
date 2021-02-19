@@ -2,7 +2,7 @@ const { CardGroup, OddsCalculator } = require("poker-odds-calculator");
 
 class Player {
   static get VERSION() {
-    return "0.2";
+    return "0.3";
   }
 
   static betRequest(gameState, bet) {
@@ -36,5 +36,9 @@ class Player {
 module.exports = Player;
 
 function parseCard(card) {
+  if (card.rank === "10") {
+    return `t${card.suit[0]}`;
+  }
+
   return `${card.rank}${card.suit[0]}`;
 }
