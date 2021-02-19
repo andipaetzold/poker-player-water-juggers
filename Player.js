@@ -74,11 +74,7 @@ class Player {
             raise(bet, gameState, player, 1);
             break;
           case 3: // two pair
-            if (isSomeoneAllIn) {
-              fold(bet);
-            } else {
-              raise(bet, gameState, player, 5);
-            }
+            raise(bet, gameState, player, 5);
             break;
           case 4: // three of a kind
             raise(bet, gameState, player, 10);
