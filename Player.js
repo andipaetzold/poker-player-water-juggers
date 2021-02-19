@@ -7,7 +7,7 @@ class Player {
     try {
       console.log('betRequest', gameState);
       const player = gameState.players[gameState.in_action];
-      bet(gameState.current_buy_in - player.bet);
+      bet(player.stack);
     } catch (e) {
       console.error(e);
       bet(0);
