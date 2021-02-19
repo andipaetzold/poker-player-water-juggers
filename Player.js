@@ -12,10 +12,18 @@ class Player {
       console.log("betRequest", JSON.stringify(gameState, undefined, 4));
 
       const pair = getPair(player.hole_cards);
+      const probRow = pairProbability.find((p) => p.pair === pair);
 
-      console.log(pairProbability.find((p) => p.pair === pair));
-
-      bet(player.stack);
+      if (isPreFlop(gameState)) {
+        if (probRow.wins > 20) {
+          bet(player.stack);
+        } else {
+          console.log('Fold')
+          bet(0);
+        }
+      } else {
+        bet(player.stack);
+      }
     } catch (e) {
       console.error(e);
       bet(player.stack);
@@ -26,6 +34,10 @@ class Player {
 }
 
 module.exports = Player;
+
+function isPreFlop(gameState) {
+  return gameState.community_cards.length === 0;
+}
 
 function getPair(cards) {
   const sameSuit = cards[0].suit === cards[1].suit;
