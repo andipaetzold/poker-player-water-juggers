@@ -58,38 +58,38 @@ class Player {
         console.log(`Rank: ${hand.rank}`)
         console.log(`Hand Name: ${hand.name}`)
         switch (hand.rank) {
-          case 1:
+          case 1: // Highest card
             fold(bet);
             break;
-          case 2:
+          case 2: // one pair
             call(bet, gameState, player);
             break;
-          case 3:
+          case 3: // two pair
             call(bet, gameState, player);
             break;
-          case 4:
+          case 4: // three of a kind
             call(bet, gameState, player);
             break;
-          case 5:
+          case 5: // straight
             call(bet, gameState, player);
             break;
-          case 6:
+          case 6: // flush
             raise(bet, gameState, player, 5);
             break;
-          case 7:
+          case 7: // full house
             raise(bet, gameState, player, 10);
             break;
-          case 8:
+          case 8: // Four of a kind
             raise(bet, gameState, player, 15);
             break;
-          case 9:
+          case 9: // Straight flush
             raise(bet, gameState, player, 50);
             break;
-          case 10:
+          case 10: // Royal flush
             allIn(bet, player);
             break;
           default:
-            fold(bet);
+            allIn(bet, player)
             break;
         }
       }
