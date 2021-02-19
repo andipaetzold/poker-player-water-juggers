@@ -19,7 +19,7 @@ const ranksOrdered = [
 
 class Player {
   static get VERSION() {
-    return "0.7";
+    return "0.8";
   }
 
   static betRequest(gameState, bet) {
@@ -38,39 +38,70 @@ class Player {
         } else {
           fold(bet);
         }
-      } else if (isPreTurn(gameState)) {
-        console.log("Phase: pre-turn");
-
-        const ourRanks = player.hole_cards.map((c) => c.rank);
-        const hasPair = gameState.community_cards.find((c) =>
-          ourRanks.includes(c.rank)
-        );
-
-        if (hasPair) {
-          raise(bet, gameState, player, 5);
-        } else {
-          call(bet, gameState, player);
-        }
       } else {
-        console.log("Phase: pre-river");
-        call(bet, gameState, player);
+        if (isPreTurn(gameState)) {
+          console.log("Phase: pre-turn");
+        } else if (isPreRiver(gameState)) {
+          console.log("Phase: pre-river");
+        } else {
+          console.log("Phase: pre-showdown");
+        }
+
+        const hand = Hand.solve([
+          ...player.hole_cards.map((card) => `${getRank(card)}${card.suit[0]}`),
+          ...gameState.community_cards.map(
+            (card) => `${getRank(card)}${card.suit[0]}`
+          ),
+        ]);
+
+        switch (hand.rank) {
+          case 1:
+            fold(bet);
+            break;
+          case 2:
+            call(bet, gameState, player);
+            break;
+          case 3:
+            call(bet, gameState, player);
+            break;
+          case 4:
+            call(bet, gameState, player);
+            break;
+          case 5:
+            call(bet, gameState, player);
+            break;
+          case 6:
+            raise(bet, gameState, player, 5);
+            break;
+          case 7:
+            raise(bet, gameState, player, 10);
+            break;
+          case 8:
+            raise(bet, gameState, player, 15);
+            break;
+          case 9:
+            raise(bet, gameState, player, 50);
+            break;
+          case 10:
+            allIn(bet, player);
+            break;
+          default:
+            fold(bet);
+            break;
+        }
       }
     } catch (e) {
       console.error(e);
       bet(player.stack);
     }
-
-    const hand = Hand.solve([
-      ...player.hole_cards.map((card) => `${getRank(card)}${card.suit[0]}`),
-      ...gameState.community_cards.map(
-        (card) => `${getRank(card)}${card.suit[0]}`
-      ),
-    ]);
-
-    console.log(hand);
   }
 
   static showdown(gameState) {}
+}
+
+function allIn(bet, player) {
+  console.log("Action: All in");
+  bet(player.stack);
 }
 
 function call(bet, gameState, player) {
@@ -96,6 +127,9 @@ function isPreFlop(gameState) {
 
 function isPreTurn(gameState) {
   return gameState.community_cards.length === 3;
+}
+function isPreRiver(gameState) {
+  return gameState.community_cards.length === 4;
 }
 
 function getPair(cards) {
