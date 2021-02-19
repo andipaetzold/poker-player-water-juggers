@@ -1,8 +1,8 @@
-import { CardGroup, OddsCalculator } from "poker-odds-calculator";
+const { CardGroup, OddsCalculator } = require("poker-odds-calculator");
 
 class Player {
   static get VERSION() {
-    return "0.1";
+    return "0.2";
   }
 
   static betRequest(gameState, bet) {
