@@ -18,7 +18,7 @@ const ranksOrdered = [
 
 class Player {
   static get VERSION() {
-    return "0.5";
+    return "0.6";
   }
 
   static betRequest(gameState, bet) {
@@ -32,13 +32,15 @@ class Player {
 
       if (isPreFlop(gameState)) {
         if (probRow.wins > 20) {
+          console.log("Action: All-In");
           bet(player.stack);
         } else {
-          console.log("Fold");
+          console.log("Action: Fold");
           bet(0);
         }
       } else {
-        bet(player.stack);
+        console.log("Action: Call");
+        bet(gameState.current_buy_in - player.bet);
       }
     } catch (e) {
       console.error(e);
@@ -61,7 +63,6 @@ function getPair(cards) {
       ranksOrdered.findIndex((v) => v === r2) -
       ranksOrdered.findIndex((v) => v === r1)
   );
-  console.log(ranks);
 
   const sameSuit = cards[0].suit === cards[1].suit;
   return `${ranks.join("")}${sameSuit ? "s" : ""}`;
