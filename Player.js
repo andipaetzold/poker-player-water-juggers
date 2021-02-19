@@ -26,8 +26,14 @@ class Player {
     const player = gameState.players[gameState.in_action];
 
     try {
-      console.log("Community Cards", JSON.stringify(gameState.community_cards, undefined, 4));
-      console.log("Hole Cards", JSON.stringify(player.hole_cards, undefined, 4));
+      console.log(
+        "Community Cards",
+        JSON.stringify(gameState.community_cards, undefined, 4)
+      );
+      console.log(
+        "Hole Cards",
+        JSON.stringify(player.hole_cards, undefined, 4)
+      );
 
       const pair = getPair(player.hole_cards);
       const probRow = pairProbability.find((p) => p.pair === pair);
@@ -55,8 +61,8 @@ class Player {
           ),
         ]);
 
-        console.log(`Rank: ${hand.rank}`)
-        console.log(`Hand Name: ${hand.name}`)
+        console.log(`Rank: ${hand.rank}`);
+        console.log(`Hand Name: ${hand.name}`);
         switch (hand.rank) {
           case 1: // Highest card
             fold(bet);
@@ -71,16 +77,16 @@ class Player {
             call(bet, gameState, player);
             break;
           case 5: // straight
-            call(bet, gameState, player);
-            break;
-          case 6: // flush
             raise(bet, gameState, player, 5);
             break;
-          case 7: // full house
+          case 6: // flush
             raise(bet, gameState, player, 10);
             break;
-          case 8: // Four of a kind
+          case 7: // full house
             raise(bet, gameState, player, 15);
+            break;
+          case 8: // Four of a kind
+            raise(bet, gameState, player, 25);
             break;
           case 9: // Straight flush
             raise(bet, gameState, player, 50);
@@ -89,7 +95,7 @@ class Player {
             allIn(bet, player);
             break;
           default:
-            allIn(bet, player)
+            allIn(bet, player);
             break;
         }
       }
