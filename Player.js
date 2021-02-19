@@ -122,7 +122,11 @@ function call(bet, gameState, player) {
 
 function raise(bet, gameState, player, factor) {
   console.log("Action: Raise", factor);
-  bet(gameState.current_buy_in - player.bet + factor * gameState.minimum_raise);
+  bet(
+    gameState.current_buy_in -
+      player.bet +
+      Math.max(gameState.minimum_raise, 10) * factor
+  );
 }
 
 function fold(bet) {
